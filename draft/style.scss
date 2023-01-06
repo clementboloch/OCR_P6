@@ -106,6 +106,22 @@ div, h1, h2 {
             background-color: lightblue;
             margin: 10px $icon-margin 20px 0;
         }
+        & .next-icon {
+            display: none;
+            position: relative;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            filter: brightness(0) invert(0.8);
+            height: 30%;
+            width: auto;
+            transition: all .2s ease-in-out;
+        }
+        &:hover {
+            .next-icon {
+                display: block;
+            }
+        }
         & .next {
             position: absolute;
             right: 0;
@@ -113,14 +129,10 @@ div, h1, h2 {
             height: calc($icon-width * 9 / 16);
             background-color: rgba($color: #000, $alpha: 0.5);
             margin: 10px 0 20px 0;
-            & .next-icon {
-                position: relative;
-                filter: brightness(0) invert(0.8);
-                height: 30%;
-                width: auto;
-                left: 50%;
-                top: 50%;
-                transform: translate(-50%, -50%);
+            &:hover {
+                & .next-icon {
+                    transform: scale(1.2) translate(-40%, -40%);
+                }
             }
         }
     }
