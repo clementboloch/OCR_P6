@@ -17,6 +17,8 @@ class Movie {
         this.genres = dic.genres;
 
         this.categoryId = categoryId;
+        
+        this.generateElement();
     }
     generateElement() {
         const container = document.createElement("div");
@@ -32,9 +34,13 @@ class Movie {
   }
 
   class Category {
-    constructor(dic) {
+    constructor(dic, limit = 20) {
         this.id = dic.id;
+        console.log("this.id", this.id);
         this.name = dic.name;
+        this.limit = limit;
+
+        this.generateElement();
     }
     generateElement() {
         const categoryContainer = document.createElement("div");
@@ -65,7 +71,9 @@ class Movie {
     }
 
     rightSlide() {
-        console.log("rightSlide");
+        const movieContainer = document.getElementById(`movies-cat${this.id}`);
+        console.log("this.id", this.id);
+        movieContainer.style.marginLeft = "0";
     }
   }
 
@@ -79,8 +87,7 @@ class Movie {
     const limit = 20;
     
     for (const category of categories) {
-        const Categorie = new Category(category);
-        Categorie.generateElement();
+        new Category(category);
         
         for (let page = 1; page <= limit; page++) {
             const response = await fetch(`http://localhost:8000/api/v1/titles/?genre=${category.name}&page=${page}`);
@@ -88,12 +95,10 @@ class Movie {
             
             const films = myJson.results
             for (const film of films) {
-                const Film = new Movie(film, category.id);
-                Film.generateElement();
+                new Movie(film, category.id);
             }
     
-            const next = myJson.next;
-            if (next == null) break;
+            if (myJson.next == null) break;
         }
     }
 }
