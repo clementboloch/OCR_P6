@@ -55,18 +55,25 @@ class Movie {
         this.movieContainer.classList.add('movie-container');
         this.movieContainer.setAttribute("id", `movies-cat${this.id}`);
         
-        this.nextContainer = document.createElement("div");
-        this.nextContainer.classList.add('next');
-        const nextImage = document.createElement("img");
-        nextImage.classList.add('next-icon');
-        nextImage.setAttribute("src", "img/icon/arrow_right.svg");
-        nextImage.setAttribute("alt", "next");
-        this.nextContainer.addEventListener("click", () => this.slide(this, "rigth"));
-        
         categoryContainer.appendChild(nameContainer);
         categoryContainer.appendChild(this.movieContainer);
-        this.movieContainer.appendChild(this.nextContainer);
-        this.nextContainer.appendChild(nextImage);
+        
+        this.nextContainer = document.createElement("div");
+        this.beforeContainer = document.createElement("div");
+
+        [
+            {html: this.nextContainer, class: 'next', src: "img/icon/arrow_right.svg", side: "rigth"},
+            {html: this.beforeContainer, class: 'before', src: "img/icon/arrow_left.svg", side: "left"},
+        ].forEach((element) => {
+            element.html.classList.add('slide', element.class);
+            const image = document.createElement("img");
+            image.classList.add('slide-icon');
+            image.setAttribute("src", element.src);
+            image.setAttribute("alt", "slide");
+            element.html.addEventListener("click", () => this.slide(this, element.side));
+            element.html.appendChild(image);
+            this.movieContainer.appendChild(element.html);
+        })
 
         document.body.appendChild(categoryContainer);
     }
@@ -131,7 +138,7 @@ class Movie {
     const categories = myJson.results;
     
     for (const category of categories) {
-        const newCategory = new Category(category, 2);
+        const newCategory = new Category(category, 5);
         newCategory.addMovies();
     }
 }
