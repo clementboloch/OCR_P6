@@ -55,18 +55,18 @@ class Movie {
         this.movieContainer.classList.add('movie-container');
         this.movieContainer.setAttribute("id", `movies-cat${this.id}`);
         
-        const nextContainer = document.createElement("div");
-        nextContainer.classList.add('next');
+        this.nextContainer = document.createElement("div");
+        this.nextContainer.classList.add('next');
         const nextImage = document.createElement("img");
         nextImage.classList.add('next-icon');
         nextImage.setAttribute("src", "img/icon/arrow_right.svg");
         nextImage.setAttribute("alt", "next");
-        nextContainer.addEventListener("click", () => this.slide(this, "rigth"));
+        this.nextContainer.addEventListener("click", () => this.slide(this, "rigth"));
         
         categoryContainer.appendChild(nameContainer);
         categoryContainer.appendChild(this.movieContainer);
-        this.movieContainer.appendChild(nextContainer);
-        nextContainer.appendChild(nextImage);
+        this.movieContainer.appendChild(this.nextContainer);
+        this.nextContainer.appendChild(nextImage);
 
         document.body.appendChild(categoryContainer);
     }
@@ -99,8 +99,14 @@ class Movie {
         
         const oldPosition = parseFloat(window.getComputedStyle(category.movieContainer).marginLeft);
         let newPosition;
+        let slideSize;
         if (side == "rigth") {
-            const slideSize = this.lastMovie + 6 <= this.nbMovies ? 6 : this.nbMovies - this.lastMovie;
+            if (this.lastMovie + 6 <= this.nbMovies) {
+                slideSize = 6;
+            } else {
+                slideSize = this.nbMovies - this.lastMovie;
+                this.nextContainer.style.display = 'none'
+            }
             this.lastMovie += slideSize;
             newPosition = oldPosition - slideSize * (movieWidth + movieMarginRight);
             
