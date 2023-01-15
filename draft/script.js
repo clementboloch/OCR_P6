@@ -22,7 +22,7 @@ class Movie {
     }
     generateElement() {
         const container = document.createElement("div");
-        container.classList.add('movie');
+        container.classList.add('movie', `movie-cat${this.categoryId}`);
         const content = document.createTextNode(this.title);
         container.appendChild(content);
         const category = document.getElementById(`movies-cat${this.categoryId}`);
@@ -89,7 +89,6 @@ class Movie {
             if (myJson.next == null) break;
         }
         this.lastMovie = this.nbMovies >= 6 ? 6 : this.nbMovies;
-        console.log("this.lastMovie", this.lastMovie)
     }
 
     slide(category, side) {
@@ -104,10 +103,16 @@ class Movie {
             const slideSize = this.lastMovie + 6 <= this.nbMovies ? 6 : this.nbMovies - this.lastMovie;
             this.lastMovie += slideSize;
             newPosition = oldPosition - slideSize * (movieWidth + movieMarginRight);
+            
+            // Pour mettre les derniers films en première position
+            // const catMovies = document.getElementsByClassName(`movie-cat${this.id}`);
+            // const movingMovies = Array.from(catMovies).slice(0, slideSize - 1);
+            // for (const movie of movingMovies) this.movieContainer.appendChild(movie);
         } else {
-            const slideSize = this.firstMovie - 6 <= 0 ? 6 : this.firstMovie;
-            this.firstMovie -= slideSize;
-            newPosition = oldPosition + slideSize * (movieWidth + movieMarginRight);
+            console.log("left slide");
+            // const slideSize = this.firstMovie - 6 <= 0 ? 6 : this.firstMovie;
+            // this.firstMovie -= slideSize;
+            // newPosition = oldPosition + slideSize * (movieWidth + movieMarginRight);
         }
         category.movieContainer.style.marginLeft = `${newPosition}px`;
     }
@@ -120,7 +125,7 @@ class Movie {
     const categories = myJson.results;
     
     for (const category of categories) {
-        const newCategory = new Category(category);
+        const newCategory = new Category(category, 2);
         newCategory.addMovies();
     }
 }
