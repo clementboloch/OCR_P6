@@ -1,6 +1,7 @@
 $icon-right-margin: 10px;
 $icon-width: calc((100vw - 7 * $icon-right-margin) / 6.6);
 $left-margin: calc($icon-right-margin + 0.3 * $icon-width);
+$slide-duration: 1000ms;
 
 *, ::after, ::before, div {
     box-sizing: border-box;
@@ -99,6 +100,7 @@ div, h1, h2 {
         display: flex;
         flex-wrap: nowrap;
         overflow:hidden;
+        transition: margin $slide-duration ease-in-out;
         
         & .movie {
             min-width: $icon-width;
@@ -125,6 +127,8 @@ div, h1, h2 {
             }
         }
         & .slide {
+            visibility: hidden;
+            opacity: 0;
             position: absolute;
             width: calc(0.3 * $icon-width);
             height: calc($icon-width * 9 / 16);
@@ -135,6 +139,11 @@ div, h1, h2 {
                 & .slide-icon {
                     transform: scale(1.2) translate(-40%, -40%);
                 }
+            }
+            &.visible {
+                visibility: visible !important;
+                opacity: 1 !important;
+                transition: opacity 1000ms linear, visibility ;
             }
         }
         & .next {

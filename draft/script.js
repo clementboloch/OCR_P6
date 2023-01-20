@@ -65,7 +65,7 @@ class Movie {
             {html: this.nextContainer, class: 'next', src: "img/icon/arrow_right.svg", side: "rigth", display: true},
             {html: this.beforeContainer, class: 'before', src: "img/icon/arrow_left.svg", side: "left", display: false},
         ].forEach((element) => {
-            if (!element.display) element.html.style.display = 'none';
+            if (element.display) element.html.classList.add('visible');
             element.html.classList.add('slide', element.class);
             const image = document.createElement("img");
             image.classList.add('slide-icon');
@@ -124,10 +124,10 @@ class Movie {
             this.lastMovie -= slideSize;
             newPosition = oldPosition + slideSize * (movieWidth + movieMarginRight);
         }
-        if (this.firstMovie == 1) this.beforeContainer.style.display = 'none';
-        else this.beforeContainer.style.removeProperty('display');
-        if (this.lastMovie == this.nbMovies) this.nextContainer.style.display = 'none';
-        else this.nextContainer.style.removeProperty('display');
+        if (this.firstMovie == 1) this.beforeContainer.classList.remove('visible');
+        else this.beforeContainer.classList.add('visible');
+        if (this.lastMovie == this.nbMovies) this.nextContainer.classList.remove('visible');
+        else this.nextContainer.classList.add('visible');
         category.movieContainer.style.marginLeft = `${newPosition}px`;
     }
   }
