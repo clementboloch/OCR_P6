@@ -69,6 +69,7 @@ class Movie {
         this.limit = limit;
         this.nbMovies = 0;
         this.firstMovie = 1;
+        this.listening = true;
 
         this.generateElement();
     }
@@ -129,6 +130,8 @@ class Movie {
     }
 
     slide(category, side) {
+        if (!this.listening) return;
+        this.listening = false;
         const movie = document.getElementsByClassName("movie")[0];
         const movieStyle = window.getComputedStyle(movie);
         const movieWidth = parseFloat(movieStyle.width);
@@ -158,6 +161,11 @@ class Movie {
         if (this.lastMovie == this.nbMovies) this.nextContainer.classList.remove('visible');
         else this.nextContainer.classList.add('visible');
         category.movieContainer.style.marginLeft = `${newPosition}px`;
+
+        // Warning: the timeout value must be the same as the animation duration in the CSS file
+        setTimeout(() => {
+            this.listening = true;
+          }, 1000)
     }
   }
 
