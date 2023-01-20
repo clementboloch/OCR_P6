@@ -1,7 +1,6 @@
-// $icon-height: 150px;
 $icon-right-margin: 10px;
-$left-margin: calc((100vw - 6 * $icon-right-margin) / 22);
-$icon-width: calc((100vw - $left-margin - 6 * $icon-right-margin) / 6.3);
+$icon-width: calc((100vw - 7 * $icon-right-margin) / 6.6);
+$left-margin: calc($icon-right-margin + 0.3 * $icon-width);
 
 *, ::after, ::before, div {
     box-sizing: border-box;
@@ -103,6 +102,7 @@ div, h1, h2 {
         
         & .movie {
             min-width: $icon-width;
+            max-width: $icon-width;
             height: calc($icon-width * 9 / 16);
             background-color: lightblue;
             margin: 10px $icon-right-margin 20px 0;
@@ -126,7 +126,7 @@ div, h1, h2 {
         }
         & .slide {
             position: absolute;
-            width: calc($icon-width * 0.3);
+            width: calc(0.3 * $icon-width);
             height: calc($icon-width * 9 / 16);
             background-color: rgba($color: #000, $alpha: 0.5);
             margin: 10px 0 20px 0;

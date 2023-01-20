@@ -17,7 +17,7 @@ class Movie {
         this.genres = dic.genres;
 
         this.categoryId = categoryId;
-        
+
         this.generateElement();
     }
     generateElement() {
@@ -39,32 +39,33 @@ class Movie {
         this.name = dic.name;
         this.limit = limit;
         this.nbMovies = 0;
-        // this.firstMovie = 1;
+        this.firstMovie = 1;
 
         this.generateElement();
     }
     generateElement() {
         const categoryContainer = document.createElement("div");
         categoryContainer.classList.add('category');
-        
+
         const nameContainer = document.createElement("h2");
         const name = document.createTextNode(this.name);
         nameContainer.appendChild(name);
-        
+
         this.movieContainer = document.createElement("div");
         this.movieContainer.classList.add('movie-container');
         this.movieContainer.setAttribute("id", `movies-cat${this.id}`);
-        
+
         categoryContainer.appendChild(nameContainer);
         categoryContainer.appendChild(this.movieContainer);
-        
+
         this.nextContainer = document.createElement("div");
         this.beforeContainer = document.createElement("div");
 
         [
-            {html: this.nextContainer, class: 'next', src: "img/icon/arrow_right.svg", side: "rigth"},
-            {html: this.beforeContainer, class: 'before', src: "img/icon/arrow_left.svg", side: "left"},
+            {html: this.nextContainer, class: 'next', src: "img/icon/arrow_right.svg", side: "rigth", display: true},
+            {html: this.beforeContainer, class: 'before', src: "img/icon/arrow_left.svg", side: "left", display: false},
         ].forEach((element) => {
+            if (!element.display) element.html.style.display = 'none';
             element.html.classList.add('slide', element.class);
             const image = document.createElement("img");
             image.classList.add('slide-icon');
@@ -86,13 +87,13 @@ class Movie {
     async addMovies() {
         for (let page = 1; page <= this.limit; page++) {
             const response = await fetch(`http://localhost:8000/api/v1/titles/?genre=${this.name}&page=${page}`);
-            const myJson = await response.json(); 
-            
+            const myJson = await response.json();
+
             const films = myJson.results
             for (const film of films) {
                 this.addMovie(film);
             }
-    
+
             if (myJson.next == null) break;
         }
         this.lastMovie = this.nbMovies >= 6 ? 6 : this.nbMovies;
@@ -103,40 +104,40 @@ class Movie {
         const movieStyle = window.getComputedStyle(movie);
         const movieWidth = parseFloat(movieStyle.width);
         const movieMarginRight = parseFloat(movieStyle.marginRight);
-        
+
         const oldPosition = parseFloat(window.getComputedStyle(category.movieContainer).marginLeft);
         let newPosition;
-        let slideSize;
+        let slideSize = 6;
         if (side == "rigth") {
-            if (this.lastMovie + 6 <= this.nbMovies) {
-                slideSize = 6;
-            } else {
-                slideSize = this.nbMovies - this.lastMovie;
-                this.nextContainer.style.display = 'none'
-            }
+            if (this.lastMovie + 6 > this.nbMovies) slideSize = this.nbMovies - this.lastMovie;
+            this.firstMovie += slideSize;
             this.lastMovie += slideSize;
             newPosition = oldPosition - slideSize * (movieWidth + movieMarginRight);
-            
+
             // Pour mettre les derniers films en première position
             // const catMovies = document.getElementsByClassName(`movie-cat${this.id}`);
             // const movingMovies = Array.from(catMovies).slice(0, slideSize - 1);
             // for (const movie of movingMovies) this.movieContainer.appendChild(movie);
         } else {
-            console.log("left slide");
-            // const slideSize = this.firstMovie - 6 <= 0 ? 6 : this.firstMovie;
-            // this.firstMovie -= slideSize;
-            // newPosition = oldPosition + slideSize * (movieWidth + movieMarginRight);
+            if (this.firstMovie - 6 < 0) slideSize = this.firstMovie - 1;
+            this.firstMovie -= slideSize;
+            this.lastMovie -= slideSize;
+            newPosition = oldPosition + slideSize * (movieWidth + movieMarginRight);
         }
+        if (this.firstMovie == 1) this.beforeContainer.style.display = 'none';
+        else this.beforeContainer.style.removeProperty('display');
+        if (this.lastMovie == this.nbMovies) this.nextContainer.style.display = 'none';
+        else this.nextContainer.style.removeProperty('display');
         category.movieContainer.style.marginLeft = `${newPosition}px`;
     }
   }
 
   const importMovies = async () => {
-    
+
     const response = await fetch(`http://localhost:8000/api/v1/genres/?page=3`);
-    const myJson = await response.json(); 
+    const myJson = await response.json();
     const categories = myJson.results;
-    
+
     for (const category of categories) {
         const newCategory = new Category(category, 5);
         newCategory.addMovies();
