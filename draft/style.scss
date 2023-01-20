@@ -109,6 +109,7 @@ div, h1, h2 {
             background-color: lightblue;
             margin: 10px $icon-right-margin 20px 0;
             cursor: pointer;
+            border-radius: 3px;
         }
     & .slide-icon {
         display: none;
@@ -148,9 +149,11 @@ div, h1, h2 {
         }
         & .next {
             right: 0;
+            border-radius: 3px 0 0 3px;
         }
         & .before {
             left: 0;
+            border-radius: 0 3px 3px 0;
         }
     }
 }
