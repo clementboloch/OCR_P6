@@ -154,3 +154,13 @@ div, h1, h2 {
         }
     }
 }
+
+.movie-modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    width: 600px;
+    height: 300px;
+    background-color: whitesmoke;
+}

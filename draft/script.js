@@ -23,13 +23,28 @@ class Movie {
     generateElement() {
         const container = document.createElement("div");
         container.classList.add('movie', `movie-cat${this.categoryId}`);
+        container.addEventListener("click", () => this.displayModal(this));
         const content = document.createTextNode(this.title);
         container.appendChild(content);
         const category = document.getElementById(`movies-cat${this.categoryId}`);
         category.appendChild(container);
     }
-    generateModal() {
-        console.log("generateModal");
+    generateModal(movie) {
+        const modal = document.createElement("div");
+        modal.classList.add('movie-modal');
+        modal.addEventListener("click", () => this.removeModal(this));
+        
+        const content = document.createTextNode(movie.title);
+        modal.appendChild(content);
+        
+        this.modal = modal;
+    }
+    displayModal(movie) {
+        if (!this.modal) this.generateModal(movie);
+        document.body.appendChild(this.modal);
+    }
+    removeModal(movie) {
+        document.body.removeChild(movie.modal);
     }
   }
 
