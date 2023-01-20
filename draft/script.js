@@ -30,21 +30,35 @@ class Movie {
         category.appendChild(container);
     }
     generateModal(movie) {
+        const modalContainer = document.createElement("div");
+        modalContainer.classList.add('modal-container');
+        modalContainer.addEventListener("click", (e) => {
+            if (e.target !== modalContainer) return;
+            this.removeModal(this)
+        });
+
         const modal = document.createElement("div");
-        modal.classList.add('movie-modal');
-        modal.addEventListener("click", () => this.removeModal(this));
+        modal.classList.add('modal');
+        modalContainer.appendChild(modal);
         
+        const closeButton = document.createElement("div");
+        closeButton.classList.add('close-button');
+        closeButton.addEventListener("click", () => this.removeModal(this));
+        modal.appendChild(closeButton);
+
         const content = document.createTextNode(movie.title);
         modal.appendChild(content);
         
-        this.modal = modal;
+        this.modal = modalContainer;
     }
     displayModal(movie) {
         if (!this.modal) this.generateModal(movie);
         document.body.appendChild(this.modal);
+        document.body.style.overflow = "hidden";
     }
     removeModal(movie) {
         document.body.removeChild(movie.modal);
+        document.body.style.overflow = "scroll";
     }
   }
 
