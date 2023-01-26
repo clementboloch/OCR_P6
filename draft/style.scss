@@ -1,10 +1,23 @@
 $nb-in-row: 8;
 $visible-part: 0.5;
-$icon-right-margin: 15px;
+$icon-right-margin: 11px;
 $icon-width: calc((100vw - $nb-in-row * $icon-right-margin) / ($nb-in-row - 1 + $visible-part * 2));
 $left-margin: calc($icon-right-margin + $visible-part * $icon-width);
 $slide-duration: 1000ms;
 $proportion: 134/91;
+
+@font-face {
+    font-family: Netflix;
+    src: url("fonts/NetflixSans_W_Rg.woff2") format("woff2");
+}
+@font-face {
+    font-family: NetflixBold;
+    src: url("fonts/NetflixSans_W_Bd.woff2") format("woff2");
+}
+@font-face {
+    font-family: NetflixMedium;
+    src: url("fonts/NetflixSans_W_Md.woff2") format("woff2");
+}
 
 *, ::after, ::before, div {
     box-sizing: border-box;
@@ -14,7 +27,7 @@ body {
     margin: 0;
     padding: 0;
     background-color: #333;
-    font-family: Netflix Sans,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif;
+    font-family: Netflix,Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif;
 }
 div, h1, h2 {
     margin: 0;
@@ -91,6 +104,7 @@ div, h1, h2 {
 }
 
 .category {
+    position: relative;
     margin: 20px 0;
     // background-color: beige;
     & h2{
@@ -99,12 +113,14 @@ div, h1, h2 {
     }
     & .movie-container {
         // margin-left: calc($left-margin - 6 * ($icon-width + $icon-right-margin));
+        position: relative;
         margin-left: $left-margin;
         display: flex;
         flex-wrap: nowrap;
         transition: margin $slide-duration ease-in-out;
         
         & .movie {
+            position: relative;
             min-width: $icon-width;
             max-width: $icon-width;
             height: calc($icon-width * $proportion);
@@ -118,11 +134,24 @@ div, h1, h2 {
             background-position: center;
             background-repeat: no-repeat;
 
+            text-align: center;
+
             transition: transform .2s ease-in-out;
             
             &:hover {
                 transform: scale(1.1);
                 box-shadow: 10px 5px 8px #000;
+            }
+
+            & .movie-title {
+                display: block;
+                position: absolute;
+                width: 80%;
+                bottom: 10px;
+                left: 50%;
+                transform: translate(-50%, 0);
+                font-family: NetflixMedium, Helvetica Neue,Segoe UI,Roboto,Ubuntu,sans-serif;
+                color: #333;
             }
         }
     & .slide-icon {

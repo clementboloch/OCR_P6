@@ -40,7 +40,10 @@ class Movie {
                 container.style.backgroundImage = `url(${this.image_url})`;
                 container.style.backgroundSize = '100%';
             } else {
-                const content = document.createTextNode(this.title);
+                const content = document.createElement("span");
+                content.classList.add('movie-title');
+                const text = document.createTextNode(this.title);
+                content.appendChild(text);
                 container.appendChild(content);
             }
         });
@@ -53,9 +56,9 @@ class Movie {
         modalContainer.classList.add('modal-container');
         modalContainer.addEventListener("click", (e) => {
             if (e.target !== modalContainer) return;
-            this.removeModal(this)
+            this.removeModal(this);
         });
-
+        
         const modal = document.createElement("div");
         modal.classList.add('modal');
         modalContainer.appendChild(modal);
