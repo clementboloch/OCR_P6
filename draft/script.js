@@ -1,4 +1,5 @@
 // window.onload = test;
+const nbInRow = 8;
 
 function isImg(url) {
     const img = new Image();
@@ -144,7 +145,7 @@ class Movie {
 
             if (myJson.next == null) break;
         }
-        this.lastMovie = this.nbMovies >= 6 ? 6 : this.nbMovies;
+        this.lastMovie = this.nbMovies >= nbInRow - 1 ? nbInRow - 1 : this.nbMovies;
     }
 
     slide(category, side) {
@@ -157,9 +158,9 @@ class Movie {
 
         const oldPosition = parseFloat(window.getComputedStyle(category.movieContainer).marginLeft);
         let newPosition;
-        let slideSize = 6;
+        let slideSize = nbInRow - 1;
         if (side == "rigth") {
-            if (this.lastMovie + 6 > this.nbMovies) slideSize = this.nbMovies - this.lastMovie;
+            if (this.lastMovie + nbInRow - 1 > this.nbMovies) slideSize = this.nbMovies - this.lastMovie;
             this.firstMovie += slideSize;
             this.lastMovie += slideSize;
             newPosition = oldPosition - slideSize * (movieWidth + movieMarginRight);
@@ -169,7 +170,7 @@ class Movie {
             // const movingMovies = Array.from(catMovies).slice(0, slideSize - 1);
             // for (const movie of movingMovies) this.movieContainer.appendChild(movie);
         } else {
-            if (this.firstMovie - 6 < 0) slideSize = this.firstMovie - 1;
+            if (this.firstMovie - nbInRow - 1 < 0) slideSize = this.firstMovie - 1;
             this.firstMovie -= slideSize;
             this.lastMovie -= slideSize;
             newPosition = oldPosition + slideSize * (movieWidth + movieMarginRight);

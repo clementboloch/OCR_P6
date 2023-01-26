@@ -1,6 +1,8 @@
-$icon-right-margin: 10px;
-$icon-width: calc((100vw - 7 * $icon-right-margin) / 6.6);
-$left-margin: calc($icon-right-margin + 0.3 * $icon-width);
+$nb-in-row: 8;
+$visible-part: 0.5;
+$icon-right-margin: 15px;
+$icon-width: calc((100vw - $nb-in-row * $icon-right-margin) / ($nb-in-row - 1 + $visible-part * 2));
+$left-margin: calc($icon-right-margin + $visible-part * $icon-width);
 $slide-duration: 1000ms;
 $proportion: 134/91;
 
@@ -119,7 +121,6 @@ div, h1, h2 {
             transition: transform .2s ease-in-out;
             
             &:hover {
-                background-color: gray;
                 transform: scale(1.1);
                 box-shadow: 10px 5px 8px #000;
             }
@@ -144,7 +145,7 @@ div, h1, h2 {
             visibility: hidden;
             opacity: 0;
             position: absolute;
-            width: calc(0.3 * $icon-width);
+            width: calc($visible-part * $icon-width);
             height: calc($icon-width * $proportion);
             background-color: rgba($color: #000, $alpha: 0.5);
             margin: 10px 0 20px 0;
