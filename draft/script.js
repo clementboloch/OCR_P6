@@ -1,5 +1,14 @@
 // window.onload = test;
 
+function isImg(url) {
+    const img = new Image();
+    img.src = url;
+    return new Promise((resolve) => {
+      img.onerror = () => resolve(false);
+      img.onload = () => resolve(true);
+    });
+}
+
 class Movie {
     constructor(dic, categoryId) {
         this.props = dic
@@ -24,8 +33,17 @@ class Movie {
         const container = document.createElement("div");
         container.classList.add('movie', `movie-cat${this.categoryId}`);
         container.addEventListener("click", () => this.displayModal(this));
-        const content = document.createTextNode(this.title);
-        container.appendChild(content);
+        
+        isImg(this.image_url).then(res => {
+            if (res) {
+                container.style.backgroundImage = `url(${this.image_url})`;
+                container.style.backgroundSize = '100%';
+            } else {
+                const content = document.createTextNode(this.title);
+                container.appendChild(content);
+            }
+        });
+        
         const category = document.getElementById(`movies-cat${this.categoryId}`);
         category.appendChild(container);
     }
