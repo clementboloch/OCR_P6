@@ -13,7 +13,18 @@ function isImg(url) {
 class Movie {
     constructor(dic, categoryId, best = false) {
         this.props = dic;
-        this.modalInfo = ['title', 'year', 'date_published', 'duration', 'description', 'long_description', 'imdb_score', 'votes', 'image_url', 'actors', 'directors', 'genres', 'countries', 'languages'];
+        this.modalInfo = {
+            'title': {type: 'txt', above: "", before:'', after:''}, 
+            'year': {type: 'txt', above: "", before:'', after:''}, 
+            'duration': {type: 'txt', above: "", before:'', after:' min'},
+            'long_description': {type: 'txt', above: "", before:'', after:''},
+            'imdb_score': {type: 'txt', above: "", before:'Score: ', after:'/10'},
+            'image_url': {type: 'img'},
+            'actors': {type: 'txt', above:'Distribution: ', before:'', after:''},
+            'directors': {type: 'txt', above:'Director: ', before:'', after:''},
+            'genres': {type: 'txt', above:'Genres: ', before:'', after:''},
+            'countries': {type: 'txt', above:'Country: ', before:'', after:''},
+        };
 
         this.categoryId = categoryId;
 
@@ -23,7 +34,6 @@ class Movie {
     generateBestMovie() {
         const bestContainer = document.createElement("div");
         bestContainer.classList.add('bestContainer');
-        bestContainer.addEventListener("click", () => this.displayModal(this));
         
         const bestMovie = document.createElement("div");
         bestMovie.classList.add('bestMovie');
@@ -31,7 +41,8 @@ class Movie {
         const bestButton = document.createElement("a");
         bestButton.classList.add('bestButton');
         bestButton.setAttribute("href", "#");
-        const button = document.createTextNode("Play movie");
+        bestButton.addEventListener("click", () => this.displayModal(this));
+        const button = document.createTextNode("See details");
         bestButton.appendChild(button);
         
         const bestImg = document.createElement("img");
@@ -89,18 +100,38 @@ class Movie {
         modal.classList.add('modal');
         modalContainer.appendChild(modal);
         
-        const closeButton = document.createElement("div");
+        const modalContent = document.createElement("div");
+        modalContent.classList.add('modal-content');
+        modal.appendChild(modalContent);
+        
+
+        const closeButton = document.createElement("img");
         closeButton.classList.add('close-button');
+        closeButton.setAttribute("src", "img/icon/close.svg");
+        closeButton.setAttribute("alt", "close button icon");
         closeButton.addEventListener("click", () => this.removeModal(this));
         modal.appendChild(closeButton);
-
-        for (const modalProp of this.modalInfo) {
-            console.log(modalProp);
-            const content = document.createElement("div");
+        
+        for (const [modalProp, caract] of Object.entries(this.modalInfo)) {
+            let content;
+            const mybr = document.createElement('br');
+            if (caract.type == "img") {
+                content = document.createElement("img");
+                content.setAttribute("src", this.props[modalProp]);
+                content.setAttribute("alt", modalProp);
+            } else if (caract.type == "txt") {
+                content = document.createElement("div");
+                if (caract.above != "") {
+                    const textAbove = document.createTextNode(caract.above);
+                    content.appendChild(textAbove);
+                    content.appendChild(mybr);
+                }
+                const text = document.createTextNode(caract.before + this.props[modalProp] + caract.after);
+                content.appendChild(text);
+                content.classList.add("text");
+            }
             content.classList.add(modalProp);
-            const text = document.createTextNode(this.props[modalProp]);
-            content.appendChild(text);
-            modal.appendChild(content);
+            modalContent.appendChild(content);
         }
         
         this.modal = modalContainer;
