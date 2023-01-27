@@ -11,15 +11,52 @@ function isImg(url) {
 }
 
 class Movie {
-    constructor(dic, categoryId) {
+    constructor(dic, categoryId, best = false) {
         this.props = dic;
         this.modalInfo = ['title', 'year', 'date_published', 'duration', 'description', 'long_description', 'imdb_score', 'votes', 'image_url', 'actors', 'directors', 'genres', 'countries', 'languages'];
 
         this.categoryId = categoryId;
 
-        this.generateElement();
+        if (best) this.generateBestMovie();
+        else this.generateMovieIcon();
     }
-    generateElement() {
+    generateBestMovie() {
+        const bestContainer = document.createElement("div");
+        bestContainer.classList.add('bestContainer');
+        bestContainer.addEventListener("click", () => this.displayModal(this));
+        
+        const bestMovie = document.createElement("div");
+        bestMovie.classList.add('bestMovie');
+        
+        const bestButton = document.createElement("a");
+        bestButton.classList.add('bestButton');
+        bestButton.setAttribute("href", "#");
+        const button = document.createTextNode("Play movie");
+        bestButton.appendChild(button);
+        
+        const bestImg = document.createElement("img");
+        bestImg.classList.add('bestImg');
+        bestImg.setAttribute("src", this.props.image_url);
+        bestImg.setAttribute("alt", "best movie image");
+        
+        const bestTitle = document.createElement("h1");
+        bestTitle.classList.add('bestTitle');
+        const title = document.createTextNode(this.props.title);
+        bestTitle.appendChild(title);
+        
+        const bestDescription = document.createElement("p");
+        bestDescription.classList.add('bestDescription');
+        const description = document.createTextNode(this.props.description);
+        bestDescription.appendChild(description);
+        
+        bestMovie.appendChild(bestTitle);
+        bestMovie.appendChild(bestButton);
+        bestMovie.appendChild(bestDescription);
+        bestContainer.appendChild(bestImg);
+        bestContainer.appendChild(bestMovie);
+        document.body.appendChild(bestContainer);
+    }
+    generateMovieIcon() {
         const container = document.createElement("div");
         container.classList.add('movie', `movie-cat${this.categoryId}`);
         container.addEventListener("click", () => this.displayModal(this));
@@ -190,9 +227,13 @@ class Movie {
 
   const importMovies = async () => {
 
-    const response = await fetch(`http://localhost:8000/api/v1/genres/?page=3`);
-    const myJson = await response.json();
-    const categories = myJson.results;
+    const responseBest = await fetch("http://localhost:8000/api/v1/titles/3772");
+    const myJsonBest = await responseBest.json();
+    new Movie(myJsonBest, 0, true);
+
+    const responseCat = await fetch(`http://localhost:8000/api/v1/genres/?page=3`);
+    const myJsonCat = await responseCat.json();
+    const categories = myJsonCat.results;
 
     for (const category of categories) {
         const newCategory = new Category(category, 5);
