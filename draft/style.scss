@@ -106,14 +106,13 @@ div, h1, h2 {
 .category {
     position: relative;
     margin: 20px 0;
-    // background-color: beige;
+    overflow: hidden;
     & h2{
         margin-left: $left-margin;
         color: whitesmoke;
     }
     & .movie-container {
         // margin-left: calc($left-margin - 6 * ($icon-width + $icon-right-margin));
-        position: relative;
         margin-left: $left-margin;
         display: flex;
         flex-wrap: nowrap;
@@ -127,7 +126,7 @@ div, h1, h2 {
             background-color: lightgrey;
             margin: 10px $icon-right-margin 20px 0;
             cursor: pointer;
-            border-radius: 3px;
+            border-radius: 5px;
             
             background-image: url("img/icon/not_found.svg");
             background-size: 40%;
@@ -155,18 +154,18 @@ div, h1, h2 {
                 color: #333;
             }
         }
-    & .slide-icon {
-        display: none;
-        position: relative;
-        z-index: 501;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        filter: brightness(0) invert(0.8);
-        height: 20%;
-        width: auto;
-        transition: all .2s ease-in-out;
-    }
+        & .slide-icon {
+            display: none;
+            position: relative;
+            z-index: 501;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            filter: brightness(0) invert(0.8);
+            height: 20%;
+            width: auto;
+            transition: all .2s ease-in-out;
+        }
         &:hover {
             .slide-icon {
                 display: block;
@@ -195,11 +194,11 @@ div, h1, h2 {
         }
         & .next {
             right: 0;
-            border-radius: 3px 0 0 3px;
+            border-radius: 5px 0 0 5px;
         }
         & .before {
             left: 0;
-            border-radius: 0 3px 3px 0;
+            border-radius: 0 5px 5px 0;
         }
     }
 }

@@ -12,19 +12,8 @@ function isImg(url) {
 
 class Movie {
     constructor(dic, categoryId) {
-        this.props = dic
-        this.id = dic.id;
-        this.url = dic.url;
-        this.imdb_url = dic.imdb_url;
-        this.title = dic.title;
-        this.year = dic.year;
-        this.imdb_score = dic.imdb_score;
-        this.votes = dic.votes;
-        this.image_url = dic.image_url;
-        this.directors = dic.directors;
-        this.actors = dic.actors;
-        this.writers = dic.writers;
-        this.genres = dic.genres;
+        this.props = dic;
+        this.modalInfo = ['title', 'year', 'date_published', 'duration', 'description', 'long_description', 'imdb_score', 'votes', 'image_url', 'actors', 'directors', 'genres', 'countries', 'languages'];
 
         this.categoryId = categoryId;
 
@@ -35,14 +24,14 @@ class Movie {
         container.classList.add('movie', `movie-cat${this.categoryId}`);
         container.addEventListener("click", () => this.displayModal(this));
         
-        isImg(this.image_url).then(res => {
+        isImg(this.props.image_url).then(res => {
             if (res) {
-                container.style.backgroundImage = `url(${this.image_url})`;
+                container.style.backgroundImage = `url(${this.props.image_url})`;
                 container.style.backgroundSize = '100%';
             } else {
                 const content = document.createElement("span");
                 content.classList.add('movie-title');
-                const text = document.createTextNode(this.title);
+                const text = document.createTextNode(this.props.title);
                 content.appendChild(text);
                 container.appendChild(content);
             }
@@ -68,8 +57,14 @@ class Movie {
         closeButton.addEventListener("click", () => this.removeModal(this));
         modal.appendChild(closeButton);
 
-        const content = document.createTextNode(movie.title);
-        modal.appendChild(content);
+        for (const modalProp of this.modalInfo) {
+            console.log(modalProp);
+            const content = document.createElement("div");
+            content.classList.add(modalProp);
+            const text = document.createTextNode(this.props[modalProp]);
+            content.appendChild(text);
+            modal.appendChild(content);
+        }
         
         this.modal = modalContainer;
     }
@@ -143,7 +138,9 @@ class Movie {
 
             const films = myJson.results
             for (const film of films) {
-                this.addMovie(film);
+                const response = await fetch(film.url);
+                const myJson = await response.json();
+                this.addMovie(myJson);
             }
 
             if (myJson.next == null) break;
