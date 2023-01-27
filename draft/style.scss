@@ -35,12 +35,13 @@ div, h1, h2 {
 }
 
 .navbar {
-    position: fixed;
+    position: sticky;
+    overflow: hidden;
     top: 0;
     z-index: 999;
     height: 68px;
     width: 100vw;
-    background-color: rgba($color: #000, $alpha: 0.5);
+    background-color: #000;
     & .element {
         display: inline-block;
         position: relative;
@@ -77,28 +78,50 @@ div, h1, h2 {
     }
 }
 
-// TODO: changer la transparence du header en fonction du scroll
-// https://pqina.nl/blog/applying-styles-based-on-the-user-scroll-position-with-smart-css/
-// html:not([data-scroll='0']) {
-//     .navbar{
-//     background-color: #000;
-//     }
-// }
-
-.best {
+.bestContainer {
     position: relative;
     top: 0;
-    height: 600px;
-    width: 100vw;
-    background-color: pink;
-    & .presentation {
-        height: 200px;
-        width: 250px;
-        position: inherit;
-        top: 30%;
-        left: $left-margin;
-        & .description {
-            font-size: 20px;
+    height: auto;
+    width: calc(100vw - 2 * $left-margin);
+    margin: 20px auto;
+    background-color: rgb(28, 28, 28);
+    border-radius: 20px;
+    & .bestImg {
+        position: absolute;
+        top: 50%;
+        transform: translate(0, -50%);
+        right: 30px;
+        height: 80%;
+        width: auto;
+        border-radius: 5px;
+    }
+    & .bestMovie {
+        width: 50%;
+        position: relative;
+        left: 30px;
+        padding: 30px 0;
+        & .bestTitle {
+            color: #F5F5F5;
+            margin-bottom: 40px;
+            font-size: 50px;
+        }
+        & .bestButton {
+            display: inline-block;
+            text-decoration: none;
+            color: #F5F5F5;
+            padding: 5px 15px;
+            background-color: rgb(32, 32, 32);
+            border: 1px solid #F5F5F5;
+            border-radius: 5px;
+            justify-content: center;
+            margin-bottom: 30px;
+            &:hover {
+                background-color: rgb(47, 47, 47);
+            }
+        }
+        & .bestDescription {
+            color: #F5F5F5;
+            font-size: 16px;
         }
     }
 }
