@@ -1,3 +1,15 @@
+@font-face {
+  font-family: Netflix;
+  src: url("fonts/NetflixSans_W_Rg.woff2") format("woff2");
+}
+@font-face {
+  font-family: NetflixBold;
+  src: url("fonts/NetflixSans_W_Bd.woff2") format("woff2");
+}
+@font-face {
+  font-family: NetflixMedium;
+  src: url("fonts/NetflixSans_W_Md.woff2") format("woff2");
+}
 *, ::after, ::before, div {
   box-sizing: border-box;
 }
@@ -6,7 +18,7 @@ body {
   margin: 0;
   padding: 0;
   background-color: #333;
-  font-family: Netflix Sans, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif;
+  font-family: Netflix, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif;
 }
 
 div, h1, h2 {
@@ -15,18 +27,20 @@ div, h1, h2 {
 }
 
 .navbar {
-  position: fixed;
+  position: -webkit-sticky;
+  position: sticky;
+  overflow: hidden;
   top: 0;
   z-index: 999;
   height: 68px;
   width: 100vw;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: #000;
 }
 .navbar .element {
   display: inline-block;
   position: relative;
   top: 50%;
-  left: 30px;
+  left: calc(11px + 0.5 * (100vw - 88px) / 8);
   transform: translate(0, -50%);
   margin: 0 10px;
 }
@@ -49,57 +63,215 @@ div, h1, h2 {
   text-decoration: none;
 }
 
-.best {
+.bestContainer {
   position: relative;
   top: 0;
-  height: 600px;
-  width: 100vw;
-  background-color: pink;
+  height: auto;
+  width: calc(100vw - 2 * (11px + 0.5 * (100vw - 88px) / 8));
+  margin: 20px auto;
+  background-color: rgb(28, 28, 28);
+  border-radius: 20px;
 }
-.best .presentation {
-  height: 200px;
-  width: 250px;
-  position: inherit;
-  top: 30%;
+.bestContainer .bestImg {
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+  right: 30px;
+  height: 80%;
+  width: auto;
+  border-radius: 5px;
+}
+.bestContainer .bestMovie {
+  width: 50%;
+  position: relative;
   left: 30px;
+  padding: 30px 0;
 }
-.best .presentation .description {
-  font-size: 20px;
+.bestContainer .bestMovie .bestTitle {
+  color: #F5F5F5;
+  margin-bottom: 40px;
+  font-size: 50px;
+}
+.bestContainer .bestMovie .bestButton {
+  display: inline-block;
+  text-decoration: none;
+  color: #F5F5F5;
+  padding: 5px 15px;
+  background-color: rgb(32, 32, 32);
+  border: 1px solid #F5F5F5;
+  border-radius: 5px;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+.bestContainer .bestMovie .bestButton:hover {
+  background-color: rgb(47, 47, 47);
+}
+.bestContainer .bestMovie .bestDescription {
+  color: #F5F5F5;
+  font-size: 16px;
 }
 
 .category {
+  position: relative;
   margin: 20px 0;
+  overflow: hidden;
 }
 .category h2 {
-  margin-left: 30px;
+  margin-left: calc(11px + 0.5 * (100vw - 88px) / 8);
   color: whitesmoke;
 }
 .category .movie-container {
-  margin-left: 30px;
+  margin-left: calc(11px + 0.5 * (100vw - 88px) / 8);
   display: flex;
   flex-wrap: nowrap;
-  overflow: hidden;
+  transition: margin 1000ms ease-in-out;
 }
 .category .movie-container .movie {
-  min-width: calc((100vw - 30px - 60px) / 6.3);
-  height: calc((100vw - 30px - 60px) / 6.3 * 9 / 16);
-  background-color: lightblue;
-  margin: 10px 10px 20px 0;
-}
-.category .movie-container .next {
-  position: absolute;
-  right: 0;
-  width: calc((100vw - 30px - 60px) / 6.3 * 0.3);
-  height: calc((100vw - 30px - 60px) / 6.3 * 9 / 16);
-  background-color: rgba(0, 0, 0, 0.5);
-  margin: 10px 0 20px 0;
-}
-.category .movie-container .next .next-icon {
   position: relative;
-  filter: brightness(0) invert(0.8);
-  height: 30%;
-  width: auto;
+  min-width: calc((100vw - 88px) / 8);
+  max-width: calc((100vw - 88px) / 8);
+  height: calc((100vw - 88px) / 8 * 1.4725274725);
+  background-color: lightgrey;
+  margin: 10px 11px 20px 0;
+  cursor: pointer;
+  border-radius: 5px;
+  background-image: url("img/icon/not_found.svg");
+  background-size: 40%;
+  background-position: center;
+  background-repeat: no-repeat;
+  text-align: center;
+  transition: transform 0.2s ease-in-out;
+}
+.category .movie-container .movie:hover {
+  transform: scale(1.1);
+  box-shadow: 10px 5px 8px #000;
+  z-index: 502;
+}
+.category .movie-container .movie .movie-title {
+  display: block;
+  position: absolute;
+  width: 80%;
+  bottom: 10px;
+  left: 50%;
+  transform: translate(-50%, 0);
+  font-family: NetflixMedium, Helvetica Neue, Segoe UI, Roboto, Ubuntu, sans-serif;
+  color: #333;
+}
+.category .movie-container .slide-icon {
+  display: none;
+  position: relative;
+  z-index: 501;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
+  filter: brightness(0) invert(0.8);
+  height: 20%;
+  width: auto;
+  transition: all 0.2s ease-in-out;
+}
+.category .movie-container:hover .slide-icon {
+  display: block;
+}
+.category .movie-container .slide {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  z-index: 500;
+  width: calc(0.5 * (100vw - 88px) / 8);
+  height: calc((100vw - 88px) / 8 * 1.4725274725);
+  background-color: rgba(0, 0, 0, 0.5);
+  margin: 10px 0 20px 0;
+  cursor: pointer;
+}
+.category .movie-container .slide:hover .slide-icon {
+  transform: scale(1.2) translate(-40%, -40%);
+}
+.category .movie-container .slide.visible {
+  visibility: visible !important;
+  opacity: 1 !important;
+  transition: opacity 1000ms linear, visibility;
+}
+.category .movie-container .next {
+  right: 0;
+  border-radius: 5px 0 0 5px;
+}
+.category .movie-container .before {
+  left: 0;
+  border-radius: 0 5px 5px 0;
+}
+
+.modal-container {
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: scroll;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+.modal-container .modal {
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0);
+  width: 50vw;
+  border-radius: 8px;
+  margin: 40px 0;
+  background-color: #333;
+}
+.modal-container .modal .modal-content {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(7, -webkit-min-content);
+  grid-template-rows: repeat(7, min-content);
+  grid-gap: 30px;
+  grid-template-areas: "image image title title" "image image year duration" "image image description description" "rate rate description description" "countries directors actors actors" "genres genres genres genres";
+  width: 90%;
+  margin: auto;
+  padding: 20px 0;
+}
+.modal-container .modal .modal-content .text {
+  color: #F5F5F5;
+}
+.modal-container .modal .modal-content .image_url {
+  grid-area: image;
+  width: 100%;
+  margin: 0 auto;
+  border-radius: 5px;
+}
+.modal-container .modal .modal-content .title {
+  grid-area: title;
+  font-size: 30px;
+}
+.modal-container .modal .modal-content .year {
+  grid-area: year;
+}
+.modal-container .modal .modal-content .duration {
+  grid-area: duration;
+}
+.modal-container .modal .modal-content .long_description {
+  grid-area: description;
+}
+.modal-container .modal .modal-content .rate {
+  grid-area: imbd_score;
+}
+.modal-container .modal .modal-content .countries {
+  grid-area: countries;
+}
+.modal-container .modal .modal-content .directors {
+  grid-area: directors;
+}
+.modal-container .modal .modal-content .actors {
+  grid-area: actors;
+}
+.modal-container .modal .modal-content .genres {
+  grid-area: genres;
+}
+.modal-container .modal .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  height: 20px;
+  width: 20px;
+  filter: brightness(0) invert(1);
+  cursor: pointer;
 }/*# sourceMappingURL=style.css.map */
