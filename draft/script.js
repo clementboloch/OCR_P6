@@ -10,6 +10,12 @@ function isImg(url) {
     });
 }
 
+async function getJsonFromUrl(url) {
+    const response = await fetch(url);
+    const myJson = await response.json();
+    return myJson;
+}
+
 class Movie {
     constructor(dic, categoryId, best = false) {
         this.props = dic;
@@ -67,23 +73,22 @@ class Movie {
         bestContainer.appendChild(bestMovie);
         document.body.appendChild(bestContainer);
     }
-    generateMovieIcon() {
+    async generateMovieIcon() {
         const container = document.createElement("div");
         container.classList.add('movie', `movie-cat${this.categoryId}`);
         container.addEventListener("click", () => this.displayModal(this));
         
-        isImg(this.props.image_url).then(res => {
-            if (res) {
-                container.style.backgroundImage = `url(${this.props.image_url})`;
-                container.style.backgroundSize = '100%';
-            } else {
-                const content = document.createElement("span");
-                content.classList.add('movie-title');
-                const text = document.createTextNode(this.props.title);
-                content.appendChild(text);
-                container.appendChild(content);
-            }
-        });
+        const res = await isImg(this.props.image_url);
+        if (res) {
+            container.style.backgroundImage = `url(${this.props.image_url})`;
+            container.style.backgroundSize = '100%';
+        } else {
+            const content = document.createElement("span");
+            content.classList.add('movie-title');
+            const text = document.createTextNode(this.props.title);
+            content.appendChild(text);
+            container.appendChild(content);
+        }
         
         const category = document.getElementById(`movies-cat${this.categoryId}`);
         category.appendChild(container);
@@ -148,7 +153,7 @@ class Movie {
   }
 
   class Category {
-    constructor(dic, limit = 5) {
+    constructor(dic, limit = 7) {
         this.id = dic.id;
         this.name = dic.name;
         this.limit = limit;
@@ -194,24 +199,26 @@ class Movie {
         document.body.appendChild(categoryContainer);
     }
 
-    addMovie(film) {
-        new Movie(film, this.id);
+    addMovie(movieDic) {
+        new Movie(movieDic, this.id);
         this.nbMovies += 1;
     }
 
     async addMovies() {
-        for (let page = 1; page <= this.limit; page++) {
-            const response = await fetch(`http://localhost:8000/api/v1/titles/?genre=${this.name}&page=${page}`);
-            const myJson = await response.json();
-
+        let movieNb = 0;
+        let pageNb = 1;
+        let allImported = false;
+        while (allImported == false) {
+            const myJson = await getJsonFromUrl(`http://localhost:8000/api/v1/titles/?genre=${this.name}&page=${pageNb}`)
             const films = myJson.results
             for (const film of films) {
-                const response = await fetch(film.url);
-                const myJson = await response.json();
-                this.addMovie(myJson);
+                const myJSON = await getJsonFromUrl(film.url)
+                this.addMovie(myJSON);
+                movieNb++;
+                if (movieNb >= this.limit) break;
             }
-
-            if (myJson.next == null) break;
+            if (movieNb >= this.limit) allImported = true;
+            pageNb++;
         }
         this.lastMovie = this.nbMovies >= nbInRow - 1 ? nbInRow - 1 : this.nbMovies;
     }
@@ -256,22 +263,25 @@ class Movie {
     }
   }
 
-  const importMovies = async () => {
+  const importBestMovie = async () => {
+    const responseBestMovies = await fetch("http://localhost:8000/api/v1/titles/?sort_by=-imdb_score");
+    const myJsonBestMovies = await responseBestMovies.json();
+    const myJsonBestMovieURL = myJsonBestMovies.results[0]['url'];
+    const myJSON = await getJsonFromUrl(myJsonBestMovieURL)
+    new Movie(myJSON, 0, true);
+    importCatMovies();
+}
 
-    const responseBest = await fetch("http://localhost:8000/api/v1/titles/3772");
-    const myJsonBest = await responseBest.json();
-    new Movie(myJsonBest, 0, true);
-
+const importCatMovies = async () => {
     const responseCat = await fetch(`http://localhost:8000/api/v1/genres/?page=3`);
     const myJsonCat = await responseCat.json();
     const categories = myJsonCat.results;
 
     for (const category of categories) {
-        const newCategory = new Category(category, 5);
+        const newCategory = new Category(category, 20);
         newCategory.addMovies();
     }
 }
-
 function go() {
-    importMovies()
+    importBestMovie()
 }
